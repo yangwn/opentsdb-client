@@ -1,15 +1,15 @@
 package org.opentsdb.client.request;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by shifeng on 2016/5/19.
  * MyProject
  */
+
 public class Query {
+	
     private long start;
     private long end;
     private List<SubQueries> queries = new ArrayList<SubQueries>();

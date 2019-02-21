@@ -15,14 +15,10 @@ public class PoolingHttpClientTest {
 		try {
 			for (int i = 0; i < 10; i++) {
 				MetricBuilder builder = MetricBuilder.getInstance();
+				builder.addMetric("metric" + i).setDataPoint(2, 30L).addTag("tag1", "tab1value").addTag("tag2",
+						"tab2value");
 
-				builder.addMetric("metric" + i).setDataPoint(2, 30L)
-						.addTag("tag1", "tab1value")
-						.addTag("tag2", "tab2value");
-
-				SimpleHttpResponse response = client.doPost(
-						"http://10.75.201.130:4242/api/put/?details",
-						builder.build());
+				SimpleHttpResponse response = client.doPost("http://localhost:4399/api/put/?details", builder.build());
 				System.out.println(response.getStatusCode());
 				System.out.println(response.getContent());
 			}

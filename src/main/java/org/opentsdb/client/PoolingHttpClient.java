@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -43,7 +43,6 @@ public class PoolingHttpClient {
 	private static final int DEFAULT_KEEP_ALIVE_MILLISECONDS = (5 * 60 * 1000);
 
 	private static final String DEFAULT_CHARSET = "UTF-8";
-
 	private static final int DEFAULT_RETRY_COUNT = 2;
 
 	private int keepAlive = DEFAULT_KEEP_ALIVE_MILLISECONDS;
@@ -54,7 +53,6 @@ public class PoolingHttpClient {
 	private int connectTimeout = DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS;
 	private int readTimeout = DEFAULT_READ_TIMEOUT_MILLISECONDS;
 	private int waitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS;
-
 	private int retries = DEFAULT_RETRY_COUNT;
 
 	private PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
@@ -63,10 +61,9 @@ public class PoolingHttpClient {
 
 	private ConnectionKeepAliveStrategy keepAliveStrategy = new ConnectionKeepAliveStrategy() {
 		@Override
-		public long getKeepAliveDuration(HttpResponse response,
-				HttpContext context) {
-			HeaderElementIterator it = new BasicHeaderElementIterator(
-					response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+		public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+			
+			HeaderElementIterator it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
 			while (it.hasNext()) {
 				HeaderElement he = it.nextElement();
 				String param = he.getName();
@@ -86,24 +83,18 @@ public class PoolingHttpClient {
 		connManager.setDefaultMaxPerRoute(maxConnectionsPerRoute);
 
 		// config timeout
-		RequestConfig config = RequestConfig.custom()
-				.setConnectTimeout(connectTimeout)
-				.setConnectionRequestTimeout(waitTimeout)
-				.setSocketTimeout(readTimeout).build();
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(connectTimeout)
+				.setConnectionRequestTimeout(waitTimeout).setSocketTimeout(readTimeout).build();
 
-		httpClient = HttpClients.custom()
-				.setKeepAliveStrategy(keepAliveStrategy)
-				.setConnectionManager(connManager)
+		httpClient = HttpClients.custom().setKeepAliveStrategy(keepAliveStrategy).setConnectionManager(connManager)
 				.setDefaultRequestConfig(config).build();
 
 		// detect idle and expired connections and close them
-		IdleConnectionMonitorThread staleMonitor = new IdleConnectionMonitorThread(
-				connManager);
+		IdleConnectionMonitorThread staleMonitor = new IdleConnectionMonitorThread(connManager);
 		staleMonitor.start();
 	}
 
-	public SimpleHttpResponse doPost(String url, String data)
-			throws IOException {
+	public SimpleHttpResponse doPost(String url, String data) throws IOException {
 		StringEntity requestEntity = new StringEntity(data);
 		HttpPost postMethod = new HttpPost(url);
 		postMethod.setEntity(requestEntity);

@@ -18,9 +18,9 @@ package org.opentsdb.client.builder;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,7 +28,8 @@ import com.google.gson.GsonBuilder;
  * Builder used to create the JSON to push metrics to KairosDB.
  */
 public class MetricBuilder {
-	private List<Metric> metrics = new ArrayList<Metric>();
+
+	private List<Metric> metrics = Lists.newArrayList();
 	private transient Gson mapper;
 
 	private MetricBuilder() {
@@ -48,8 +49,7 @@ public class MetricBuilder {
 	/**
 	 * Adds a metric to the builder.
 	 *
-	 * @param metricName
-	 *            metric name
+	 * @param metricName metric name
 	 * @return the new metric
 	 */
 	public Metric addMetric(String metricName) {
@@ -68,18 +68,16 @@ public class MetricBuilder {
 	}
 
 	/**
-	 * Returns the JSON string built by the builder. This is the JSON that can
-	 * be used by the client add metrics.
+	 * Returns the JSON string built by the builder. This is the JSON that can be
+	 * used by the client add metrics.
 	 *
 	 * @return JSON
-	 * @throws IOException
-	 *             if metrics cannot be converted to JSON
+	 * @throws IOException if metrics cannot be converted to JSON
 	 */
 	public String build() throws IOException {
 		for (Metric metric : metrics) {
 			// verify that there is at least one tag for each metric
-			checkState(metric.getTags().size() > 0, metric.getName()
-					+ " must contain at least one tag.");
+			checkState(metric.getTags().size() > 0, metric.getName() + " must contain at least one tag.");
 		}
 		return mapper.toJson(metrics);
 	}

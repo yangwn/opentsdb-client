@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import javax.annotation.Nullable;
 
 public class Preconditions {
+	
 	public static String checkNotNullOrEmpty(String reference) {
 		com.google.common.base.Preconditions.checkNotNull(reference);
 		if (reference.isEmpty()) {
@@ -71,7 +72,6 @@ public class Preconditions {
 			}
 			builder.append(']');
 		}
-
 		return builder.toString();
 	}
 

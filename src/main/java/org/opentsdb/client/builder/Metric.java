@@ -20,9 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.opentsdb.client.util.Preconditions.checkNotNullOrEmpty;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -42,7 +42,7 @@ public class Metric {
 
 	private Object value;
 
-	private Map<String, String> tags = new HashMap<String, String>();
+	private Map<String, String> tags = Maps.newConcurrentMap();
 
 	protected Metric(String name) {
 		this.name = checkNotNullOrEmpty(name);
@@ -51,10 +51,8 @@ public class Metric {
 	/**
 	 * Adds a tag to the data point.
 	 *
-	 * @param name
-	 *            tag identifier
-	 * @param value
-	 *            tag value
+	 * @param name  tag identifier
+	 * @param value tag value
 	 * @return the metric the tag was added to
 	 */
 	public Metric addTag(String name, String value) {
@@ -68,8 +66,7 @@ public class Metric {
 	/**
 	 * Adds tags to the data point.
 	 * 
-	 * @param tags
-	 *            map of tags
+	 * @param tags map of tags
 	 * @return the metric the tags were added to
 	 */
 	public Metric addTags(Map<String, String> tags) {
@@ -82,10 +79,8 @@ public class Metric {
 	/**
 	 * set the data point for the metric.
 	 *
-	 * @param timestamp
-	 *            when the measurement occurred
-	 * @param value
-	 *            the measurement value
+	 * @param timestamp when the measurement occurred
+	 * @param value     the measurement value
 	 * @return the metric
 	 */
 	protected Metric innerAddDataPoint(long timestamp, Object value) {
@@ -99,8 +94,7 @@ public class Metric {
 	/**
 	 * Adds the data point to the metric with a timestamp of now.
 	 *
-	 * @param value
-	 *            the measurement value
+	 * @param value the measurement value
 	 * @return the metric
 	 */
 	public Metric setDataPoint(long value) {
@@ -114,10 +108,8 @@ public class Metric {
 	/**
 	 * Adds the data point to the metric.
 	 *
-	 * @param timestamp
-	 *            when the measurement occurred
-	 * @param value
-	 *            the measurement value
+	 * @param timestamp when the measurement occurred
+	 * @param value     the measurement value
 	 * @return the metric
 	 */
 	public Metric setDataPoint(long timestamp, double value) {
@@ -127,8 +119,7 @@ public class Metric {
 	/**
 	 * Adds the data point to the metric with a timestamp of now.
 	 *
-	 * @param value
-	 *            the measurement value
+	 * @param value the measurement value
 	 * @return the metric
 	 */
 	public Metric setDataPoint(double value) {
@@ -169,13 +160,11 @@ public class Metric {
 	}
 
 	public boolean isDoubleValue() {
-		return !(((Number) value).doubleValue() == Math.floor(((Number) value)
-				.doubleValue()));
+		return !(((Number) value).doubleValue() == Math.floor(((Number) value).doubleValue()));
 	}
 
 	public boolean isIntegerValue() {
-		return ((Number) value).doubleValue() == Math.floor(((Number) value)
-				.doubleValue());
+		return ((Number) value).doubleValue() == Math.floor(((Number) value).doubleValue());
 	}
 
 	/**
